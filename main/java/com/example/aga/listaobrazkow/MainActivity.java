@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity {
 
     private ArrayList<Picture> pictures = new ArrayList<Picture>();
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +43,8 @@ public class MainActivity extends ActionBarActivity {
         }
     }
     private void setListView( int [] itemNames) {
-//        ArrayAdapter<Picture> adapter = new MyListAdapter(this,R.layout.list_view, pictures );
-//        ListView list = (ListView) findViewById(R.id.android_list);
-//        list.setAdapter(adapter);
-        CodeLearnAdapter adapter = new CodeLearnAdapter(this, pictures);
-   ListView list = (ListView) findViewById(R.id.androidList);
+        MyListAdapter adapter = new MyListAdapter(this, pictures);
+        ListView list = (ListView) findViewById(R.id.androidList);
         list.setAdapter(adapter);
     }
 
@@ -79,61 +75,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    public class CodeLearnAdapter extends BaseAdapter {
-
-       ArrayList<Picture> codeLearnChapterList ;
-Activity cxt;
-
-        public CodeLearnAdapter(Activity cxt, ArrayList<Picture> list){
-            codeLearnChapterList = list;
-            this.cxt = cxt;
-        }
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            return codeLearnChapterList.size();
-        }
-
-        @Override
-        public Picture getItem(int position) {
-            return codeLearnChapterList.get(position);
-        }
-
-
-
-        @Override
-        public long getItemId(int arg0) {
-            // TODO Auto-generated method stub
-            return arg0;
-        }
-
-        @Override
-        public View getView(int arg0, View arg1, ViewGroup arg2) {
-
-            if(arg1==null)
-            {
-                LayoutInflater inflater = (LayoutInflater) cxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                arg1 = inflater.inflate(R.layout.list_view, arg2,false);
-            }
-
-            TextView chapterName = (TextView)arg1.findViewById(R.id.textView1);
-            TextView chapterDesc = (TextView)arg1.findViewById(R.id.textView2);
-            ImageView imageView = (ImageView) arg1.findViewById(R.id.imageView1);
-
-            Picture chapter = codeLearnChapterList.get(arg0);
-
-            chapterName.setText(chapter.getName());
-            chapterDesc.setText(chapter.getDescription());
-            int getIconID = chapter.getIconID();
-          imageView.setImageResource(getIconID);
-
-            return arg1;
-        }
-
-        public Picture getCodeLearnChapter(int position)
-        {
-            return codeLearnChapterList.get(position);
-        }
-}
-    }
+   }

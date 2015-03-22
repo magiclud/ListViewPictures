@@ -1,72 +1,69 @@
 package com.example.aga.listaobrazkow;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by aga on 21.03.15.
  */
-public class MyListAdapter extends ArrayAdapter<Picture> {
+public class MyListAdapter extends BaseAdapter {
+    ArrayList<Picture> data;
+    Activity context;
 
-    private int layoutResourceId;
-    private List<Picture> data;
-    LayoutInflater mInflater;
-
-    public MyListAdapter(Context context, int resourceId, List<Picture> list) {
-        super(context, resourceId, list);
-        layoutResourceId = resourceId;
+    public MyListAdapter(Activity cxt, ArrayList<Picture> list){
         data = list;
-        mInflater = LayoutInflater.from(context.getApplicationContext());
-
+        this.context = cxt;
+    }
+    @Override
+    public int getCount() {
+        return data.size();
     }
 
     @Override
-    public View getView(int position, View row, ViewGroup parent) {
-//        View itemView = row;
-//        if(itemView == null){
-//            itemView = mInflater.inflate(layoutResourceId, parent, false);
-//        }
-//        Picture currentPicture = data.get(position);
-//
-//        ImageView imageView = (ImageView) itemView.findViewById(R.id.icon2);
-//        imageView.setImageResource(currentPicture.getIconID());
+    public Picture getItem(int position) {
+        return data.get(position);
+    }
+
+
+
+    @Override
+    public long getItemId(int arg0) {
+        return arg0;
+    }
+
+    @Override
+    public View getView(int index, View row, ViewGroup parent) {
+
+        if(row==null)
+        {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflater.inflate(R.layout.list_view, parent,false);
+        }
+
+        TextView itemName = (TextView)row.findViewById(R.id.itemName);
+        TextView itemDesc = (TextView)row.findViewById(R.id.itemDesc);
+        ImageView imageView = (ImageView) row.findViewById(R.id.icon);
+
+        Picture current = data.get(index);
+
+        itemName.setText(current.getName());
+        itemDesc.setText(current.getDescription());
+        int getIconID = current.getIconID();
+        imageView.setImageResource(getIconID);
 
         return row;
-        //return super.getView(position, convertView, parent);
     }
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        // Make sure we have a view to work with (may have been given null)
-//        View itemView = convertView;
-//        if (itemView == null) {
-//            itemView = getLayoutInflater().inflate(R.layout.item_view, parent, false);
-//        }
-//
-//        // Find the car to work with.
-//        Car currentCar = myCars.get(position);
-//
-//        // Fill the view
-//        ImageView imageView = (ImageView)itemView.findViewById(R.id.item_icon);
-//        imageView.setImageResource(currentCar.getIconID());
-//
-//        // Make:
-//        TextView makeText = (TextView) itemView.findViewById(R.id.item_txtMake);
-//        makeText.setText(currentCar.getMake());
-//
-//        // Year:
-//        TextView yearText = (TextView) itemView.findViewById(R.id.item_txtYear);
-//        yearText.setText("" + currentCar.getYear());
-//
-//        // Condition:
-//        TextView condionText = (TextView) itemView.findViewById(R.id.item_txtCondition);
-//        condionText.setText(currentCar.getCondition());
-//
-//        return itemView;
-//    }
+
+    public Picture getCodeLearnChapter(int position)
+    {
+        return data.get(position);
+    }
 }
