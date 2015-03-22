@@ -19,7 +19,7 @@ public class MyListAdapter extends ArrayAdapter<Picture> {
     LayoutInflater mInflater;
 
     public MyListAdapter(Context context, int resourceId, List<Picture> list) {
-        super(context, resourceId);
+        super(context, resourceId, list);
         layoutResourceId = resourceId;
         data = list;
         mInflater = LayoutInflater.from(context.getApplicationContext());
@@ -28,16 +28,16 @@ public class MyListAdapter extends ArrayAdapter<Picture> {
 
     @Override
     public View getView(int position, View row, ViewGroup parent) {
-        View itemView = row;
-        if(itemView == null){
-            itemView = mInflater.inflate(layoutResourceId, parent, false);
-        }
-        Picture currentPicture = data.get(position);
+//        View itemView = row;
+//        if(itemView == null){
+//            itemView = mInflater.inflate(layoutResourceId, parent, false);
+//        }
+//        Picture currentPicture = data.get(position);
+//
+//        ImageView imageView = (ImageView) itemView.findViewById(R.id.icon2);
+//        imageView.setImageResource(currentPicture.getIconID());
 
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.icon2);
-        imageView.setImageResource(currentPicture.getIconID());
-
-        return itemView;
+        return row;
         //return super.getView(position, convertView, parent);
     }
 //    @Override

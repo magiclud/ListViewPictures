@@ -3,4 +3,21 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <resources>
+        <plurals name="numberOfSongsAvailable">
+            <item quantity="one">Znaleziono %d piosenkę.</item>
+            <item quantity="few">Znaleziono %d piosenki.</item>
+            <item quantity="other">Znaleziono %d piosenek.</item>
+        </plurals>
+    </resources>
+    <string-array name="animalDescriptions">
+        <item>Zwierzyna leśna. Z rogami na głowie.</item>
+        <item>Lubi spać na piecu. Jego imię to Filemon.</item>
+        <item>Każdego dnia zjada ziarna przenżyta na śniadanie.</item>
+        <item>Wierny przyjaciel człowieka.</item>
+        <item>Płochliwa. Lubi muchomory.</item>
+        <item>Żyje na sawannie. Drapieżnik</item>
+        <item>Najlepszy żak w szkole. Wszystko wie.</item>
+        <item>Jej udka są przysmakiem Francuzów.</item>
+    </string-array>
 </resources>

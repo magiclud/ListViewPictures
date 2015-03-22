@@ -1,5 +1,6 @@
 package com.example.aga.listaobrazkow;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,17 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private List<Picture> pictures = new ArrayList<Picture>();
+    private ArrayList<Picture> pictures = new ArrayList<Picture>();
     
 
     @Override
@@ -27,23 +29,34 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int[] drawables = new int[] { R.drawable.jelen,R.drawable.kot,R.drawable.mysz,R.drawable.pies,R.drawable.sarna,R.drawable.tygrys,R.drawable.sowa1,R.drawable.zaba, };
-        String [] names = new String[]{ "jelen","kot","mysz","pies","sarna","tygrys","sowa","zaba" };
-        setPicturesList(drawables, names);
-        setListView();
+        int[] itemDrawables = new int[] { R.drawable.jelen,R.drawable.kot,R.drawable.mysz,R.drawable.pies,R.drawable.sarna,R.drawable.tygrys,R.drawable.sowa1,R.drawable.zaba, };
+        String [] itemNames = new String[]{ "jelen","kot","mysz","pies","sarna","tygrys","sowa","zaba" };
+        String[] itemDescriptions =   getResources().getStringArray(R.array.animalDescriptions);
+
+        setPicturesList(itemDrawables, itemNames, itemDescriptions);
+        setListView(itemDrawables);
     }
 
-    private void setPicturesList(int[] drawables, String[] names) {
+    private void setPicturesList(int[] drawables, String[] names, String[] description) {
 
         for (int i=0; i<drawables.length; i++){
-            pictures.add(new Picture(names[i],0,drawables[i]));
+            pictures.add(new Picture(names[i],0,drawables[i], description[i]));
         }
     }
-    private void setListView() {
-        ArrayAdapter<Picture> adapter = new MyListAdapter(this,R.layout.items_view, pictures );
-        ListView list = (ListView) findViewById(R.id.picturesListView);
+    private void setListView( int [] itemNames) {
+//        ArrayAdapter<Picture> adapter = new MyListAdapter(this,R.layout.list_view, pictures );
+//        ListView list = (ListView) findViewById(R.id.android_list);
+//        list.setAdapter(adapter);
+        CodeLearnAdapter adapter = new CodeLearnAdapter(this, pictures);
+   ListView list = (ListView) findViewById(R.id.androidList);
         list.setAdapter(adapter);
     }
+
+//    public void onListItemClick(ListView lv ,View view,int position,int imgid) {
+//
+//        String Slecteditem= (String)getListAdapter().getItem(position);
+//        Toast.makeText(this, Slecteditem, Toast.LENGTH_SHORT).show();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,27 +80,60 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MyListAdapter2 extends ArrayAdapter<Picture> {
+    public class CodeLearnAdapter extends BaseAdapter {
 
+       ArrayList<Picture> codeLearnChapterList ;
+Activity cxt;
 
-
-        public MyListAdapter2() {
-            super(MainActivity.this, R.layout.items_view,pictures);
+        public CodeLearnAdapter(Activity cxt, ArrayList<Picture> list){
+            codeLearnChapterList = list;
+            this.cxt = cxt;
+        }
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return codeLearnChapterList.size();
         }
 
         @Override
-        public View getView(int position, View row, ViewGroup parent) {
-            View itemView = row;
-            if(itemView == null){
-                itemView = getLayoutInflater().inflate(R.layout.items_view, parent, false);
+        public Picture getItem(int position) {
+            return codeLearnChapterList.get(position);
+        }
+
+
+
+        @Override
+        public long getItemId(int arg0) {
+            // TODO Auto-generated method stub
+            return arg0;
+        }
+
+        @Override
+        public View getView(int arg0, View arg1, ViewGroup arg2) {
+
+            if(arg1==null)
+            {
+                LayoutInflater inflater = (LayoutInflater) cxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                arg1 = inflater.inflate(R.layout.list_view, arg2,false);
             }
-            Picture currentPicture = pictures.get(position);
 
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
-            imageView.setImageResource(currentPicture.getIconID());
+            TextView chapterName = (TextView)arg1.findViewById(R.id.textView1);
+            TextView chapterDesc = (TextView)arg1.findViewById(R.id.textView2);
+            ImageView imageView = (ImageView) arg1.findViewById(R.id.imageView1);
 
-            return itemView;
-            //return super.getView(position, convertView, parent);
+            Picture chapter = codeLearnChapterList.get(arg0);
+
+            chapterName.setText(chapter.getName());
+            chapterDesc.setText(chapter.getDescription());
+            int getIconID = chapter.getIconID();
+          imageView.setImageResource(getIconID);
+
+            return arg1;
+        }
+
+        public Picture getCodeLearnChapter(int position)
+        {
+            return codeLearnChapterList.get(position);
         }
 }
     }
