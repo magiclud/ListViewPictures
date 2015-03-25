@@ -2,19 +2,26 @@ package com.example.aga.listaobrazkow;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
  * Created by aga on 21.03.15.
  */
 public class MyListAdapter extends BaseAdapter {
+    private static final int REQ_CODE =123 ;//request code
     ArrayList<Picture> data;
     Activity context;
 
@@ -52,18 +59,44 @@ public class MyListAdapter extends BaseAdapter {
         TextView itemDesc = (TextView)row.findViewById(R.id.itemDesc);
         ImageView imageView = (ImageView) row.findViewById(R.id.icon);
 
-        Picture current = data.get(index);
+        final Picture current = data.get(index);
 
         itemName.setText(current.getName());
         itemDesc.setText(current.getDescription());
-        int getIconID = current.getIconID();
+        final int getIconID = current.getIconID();
         imageView.setImageResource(getIconID);
+
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDataToSecondActivity(getIconID);
+
+            }
+        });
 
         return row;
     }
 
-    public Picture getCodeLearnChapter(int position)
-    {
-        return data.get(position);
+    private void sendDataToSecondActivity(int getIconID) {
+        Intent secondActivity = new Intent(context, DetailsAboutItem.class);
+        secondActivity.putExtra("wysylamDane", false);  //TODO usun
+        secondActivity.putExtra("picture",getIconID);
+        context.startActivityForResult(secondActivity, REQ_CODE);
     }
+
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == REQ_CODE) {
+//            // Make sure the request was successful
+////            if (resultCode == context.RESULT_OK) {
+//                if (data == null) {
+//                    return;
+//                }
+//                String name = data.getStringExtra("test");
+//                Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
+//           // }
+//        }
+//    }
+
+
+
 }

@@ -2,6 +2,7 @@ package com.example.aga.listaobrazkow;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +23,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final int REQ_CODE =123 ;//request code
+
     private ArrayList<Picture> pictures = new ArrayList<Picture>();
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,9 @@ public class MainActivity extends ActionBarActivity {
     }
     private void setListView( int [] itemNames) {
         MyListAdapter adapter = new MyListAdapter(this, pictures);
-        ListView list = (ListView) findViewById(R.id.androidList);
+        list = (ListView) findViewById(R.id.androidList);
         list.setAdapter(adapter);
+
     }
 
 //    public void onListItemClick(ListView lv ,View view,int position,int imgid) {
@@ -75,4 +81,19 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == REQ_CODE) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                if (data == null) {return;}
+                String name = data.getStringExtra("test");
+                Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+                list.invalidateViews();//aktualizacja
+            }
+        }
+    }
+
    }

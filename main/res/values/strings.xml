@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Lista Obrazkow</string>
     <string name="action_settings">Settings</string>
+    <string name="namePictrure">Zwierze</string>
     <string-array name="animalDescriptions">
         <item>Zwierzyna leśna. Z rogami na głowie.</item>
         <item>Lubi spać na piecu. Jego imię to Filemon.</item>
