@@ -1,13 +1,16 @@
 package com.example.aga.listaobrazkow;
 
+import java.io.Serializable;
+
 /**
  * Created by aga on 21.03.15.
  */
-public class Picture {
+
+public class Picture implements Serializable {
 
 
     private String name;
-    private int mark;
+    private float mark;
     private int iconID;
     private String description;
 
@@ -21,15 +24,16 @@ public class Picture {
     public String getName() {
         return name;
     }
-
-    public int getMark() {
+    public float getMark() {
         return mark;
     }
-
     public int getIconID() {
         return iconID;
     }
     public String getDescription(){
         return description;
+    }
+    public void setMark(float mark){
+        this.mark = mark;
     }
 }

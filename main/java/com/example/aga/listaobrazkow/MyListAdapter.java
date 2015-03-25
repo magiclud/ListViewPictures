@@ -47,7 +47,7 @@ public class MyListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int index, View row, ViewGroup parent) {
+    public View getView(final int index, View row, ViewGroup parent) {
 
         if(row==null)
         {
@@ -61,7 +61,7 @@ public class MyListAdapter extends BaseAdapter {
 
         final Picture current = data.get(index);
 
-        itemName.setText(current.getName());
+        itemName.setText(String.valueOf(current.getMark()));
         itemDesc.setText(current.getDescription());
         final int getIconID = current.getIconID();
         imageView.setImageResource(getIconID);
@@ -69,7 +69,7 @@ public class MyListAdapter extends BaseAdapter {
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDataToSecondActivity(getIconID);
+                sendDataToSecondActivity(index, current);
 
             }
         });
@@ -77,25 +77,12 @@ public class MyListAdapter extends BaseAdapter {
         return row;
     }
 
-    private void sendDataToSecondActivity(int getIconID) {
+    private void sendDataToSecondActivity(int index, Picture current) {
         Intent secondActivity = new Intent(context, DetailsAboutItem.class);
-        secondActivity.putExtra("wysylamDane", false);  //TODO usun
-        secondActivity.putExtra("picture",getIconID);
+        secondActivity.putExtra("inedexPicture", index);
+        secondActivity.putExtra("pictureItem", current);
         context.startActivityForResult(secondActivity, REQ_CODE);
     }
-
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQ_CODE) {
-//            // Make sure the request was successful
-////            if (resultCode == context.RESULT_OK) {
-//                if (data == null) {
-//                    return;
-//                }
-//                String name = data.getStringExtra("test");
-//                Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
-//           // }
-//        }
-//    }
 
 
 
