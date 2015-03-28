@@ -2,12 +2,9 @@ package com.example.aga.listaobrazkow;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+
 import android.net.Uri;
-import android.opengl.Visibility;
+
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -17,10 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +29,11 @@ import java.util.Date;
 public class MainActivity extends ActionBarActivity {
 
     private static final int REQ_CODE =123 ;//request code
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-  static final int REQUEST_TAKE_PHOTO = 1;
-    ImageView mImageView;
-
-    String mCurrentPhotoPath;
-    private ArrayList<Picture> pictures = new ArrayList<Picture>();
+    static final int REQUEST_TAKE_PHOTO = 0;
+    private  String imageFileName;
+    private  String timeStamp;
+    private  String mCurrentPhotoPath;
+    private ArrayList<Picture> pictures = new ArrayList<>();
     private ListView list;
 
     @Override
@@ -47,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.d("cyklZycia", "onCreate_MainActivity");
         setContentView(R.layout.activity_main);
+
 
         int[] itemDrawables = new int[] { R.drawable.jelen,R.drawable.kot,R.drawable.mysz,R.drawable.pies,R.drawable.sarna,R.drawable.tygrys,R.drawable.sowa1,R.drawable.zaba, };
         String [] itemNames = new String[]{ "jelen","kot","mysz","pies","sarna","tygrys","sowa","zaba" };
@@ -59,14 +54,14 @@ public class MainActivity extends ActionBarActivity {
     private void setPicturesList(int[] drawables, String[] names, String[] description) {
 
         for (int i=0; i<drawables.length; i++){
-            pictures.add(new Picture(names[i],0,drawables[i], description[i]));
+            pictures.add(new Picture(names[i],drawables[i], description[i]));
         }
     }
     private void setListView( ) {
         MyListAdapter adapter = new MyListAdapter(this, pictures);
         list = (ListView) findViewById(R.id.androidList);
         list.setAdapter(adapter);
-
+        list.deferNotifyDataSetChanged();
     }
 
     @Override
@@ -105,56 +100,19 @@ public class MainActivity extends ActionBarActivity {
                 sortPictureList();
                 list.invalidateViews();//aktualizacja
         }
-        if ( resultCode == RESULT_OK ) {
-            Log.d("PHOTO", "phoyo resultCodez  = "+resultCode);
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            Drawable drawable = new BitmapDrawable(getResources(), imageBitmap);
-////            drawable.setVisible(View.INVISIBLE);
-//           mImageView = (ImageView) findViewById(R.id.imageView);
-//            mImageView.setImageBitmap(imageBitmap);
-//            pictures.add(new Picture("AAA",0,R.id.imageView, "Zdjecie "));
-//            setListView();
-          if(mCurrentPhotoPath!=null){  setPic();
+        if ( requestCode == 0 && resultCode==RESULT_OK ) {
+          if(mCurrentPhotoPath!=null){
+              setPic();
             galleryAddPic();
+
           mCurrentPhotoPath=null;
           }
         }
-
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK ) {
-//            Log.d("PHOTO", "phoyo File data  = "+data);
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            Drawable drawable = new BitmapDrawable(getResources(), imageBitmap);
-//            drawable.
-//            ImageView mImageView = (ImageView) findViewById(R.id.imageView);
-//            mImageView.setImageBitmap(imageBitmap);
-//        }
     }
 
     private void setPic() {
-        // Get the dimensions of the View
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mImageView.setImageBitmap(bitmap);
-        mImageView.setVisibility(View.VISIBLE);
+        pictures.add(new Picture(timeStamp,timeStamp+" : "+ imageFileName, mCurrentPhotoPath));
+        list.invalidateViews();//aktualizacja
     }
 private void galleryAddPic() {
     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -204,33 +162,26 @@ private void galleryAddPic() {
     }
 
 
-//    private void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
-
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = null;
+            File photoFile;
             try {
                 photoFile = createImageFile();
-                Log.d("PHOTO", "phoyo File = "+photoFile);
+
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-
+                Log.d("PHOTO", "phoyo File = "+photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
+                takePictureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY,1);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
             } catch (IOException ex) {
                 ex.printStackTrace();
-                photoFile = null;
                 mCurrentPhotoPath = null;
 
             }
@@ -241,8 +192,8 @@ private void galleryAddPic() {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "PNG_" + timeStamp + "_";
+        timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+         imageFileName = "PNG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(

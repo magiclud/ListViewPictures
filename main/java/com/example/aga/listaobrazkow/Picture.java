@@ -13,12 +13,24 @@ public class Picture implements Serializable {
     private float mark;
     private int iconID;
     private String description;
+    private boolean fromResource;
+    String path;
 
-    public Picture(String name, int mark, int iconID,String description) {
+    public Picture(String name, int iconID,String description) {
         this.name = name;
-        this.mark = mark;
+        this.mark = 0;
         this.iconID = iconID;
         this.description = description;
+        this.fromResource = false;
+        this.path = null;
+    }
+    public Picture(String name,String description, String path) {
+        this.name = name;
+        this.mark = 0;
+        this.iconID = -1;
+        this.description = description;
+        this.fromResource = true;
+        this.path = path;
     }
 
     public String getName() {
@@ -33,7 +45,14 @@ public class Picture implements Serializable {
     public String getDescription(){
         return description;
     }
+    public boolean getFromResource(){ return  fromResource;}
+    public String getPath(){
+        return path;
+    }
     public void setMark(float mark){
         this.mark = mark;
+    }
+    public void setFromResource(boolean fromResource){
+        this.fromResource = fromResource;
     }
 }
